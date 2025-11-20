@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(cat:*)",
+      "Read(//Users/touzani/Desktop/amazon-importer/amazon-importer-js/**)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma:*)",
+      "Bash(pkill:*)",
+      "Bash(npm install:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run setup:*)",
+      "Bash(node check-db.cjs:*)",
+      "Bash(npx tsc:*)",
+      "Read(//Users/touzani/Desktop/amazon-importer/**)",
+      "Bash(chmod +x /Users/touzani/Desktop/amazon-importer/amazon-importer-ts/scripts/configure-gdpr-webhooks.js)",
+      "Bash(node /Users/touzani/Desktop/amazon-importer/amazon-importer-ts/scripts/configure-gdpr-webhooks.js)",
+      "Bash(shopify app deploy:*)",
+      "WebFetch(domain:shopify.dev)",
+      "Bash(rm:*)",
+      "Bash(kill:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shopify-dev-mcp"
+  ]
+}
