@@ -1,0 +1,8 @@
+{
+  "name": "eBay Button Extension",
+  "blocks": {
+    "ebay_button": {
+      "name": "eBay Buy Button"
+    }
+  }
+}

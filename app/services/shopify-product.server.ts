@@ -4,7 +4,7 @@ import type {
   ProductOption,
   ProductVariant,
 } from "~/types";
-import { addAffiliateTag } from "./amazon-scraper.server";
+import { addAffiliateTag } from "./ebay-scraper.server";
 
 interface MediaInput {
   mediaContentType: "IMAGE";
@@ -71,10 +71,10 @@ interface CreateProductResult {
 }
 
 /**
- * Create a Shopify product from Amazon product data
+ * Create a Shopify product from eBay product data
  * @param admin - Shopify admin GraphQL client
- * @param productData - Scraped Amazon product data
- * @param amazonUrl - Original Amazon URL
+ * @param productData - Scraped eBay product data
+ * @param ebayUrl - Original eBay URL
  * @param settings - App settings (for affiliate tag)
  * @param shouldPublish - Whether to publish product immediately (ACTIVE) or save as DRAFT
  * @param importMode - Import mode (AFFILIATE or DROPSHIPPING)
@@ -83,7 +83,7 @@ interface CreateProductResult {
 export async function createShopifyProduct(
   admin: any,
   productData: ScrapedProduct,
-  amazonUrl: string,
+  ebayUrl: string,
   settings?: AppSettings | null,
   shouldPublish: boolean = false,
   importMode: string = "DROPSHIPPING",

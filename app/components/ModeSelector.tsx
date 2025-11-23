@@ -70,7 +70,7 @@ export default function ModeSelector({
           </s-stack>
 
           <s-paragraph tone="subdued" size="small">
-            Keep original Amazon price. Add "{buttonText}" button to product page. Earn
+            Keep original eBay price. Add "{buttonText}" button to product page. Earn
             commissions through your affiliate ID.
           </s-paragraph>
 
@@ -139,7 +139,7 @@ export default function ModeSelector({
           </s-stack>
 
           <s-paragraph tone="subdued" size="small">
-            Sell at your own price. No Amazon button. Perfect for traditional
+            Sell at your own price. No eBay button. Perfect for traditional
             dropshipping.
           </s-paragraph>
         </s-stack>

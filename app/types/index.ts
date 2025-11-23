@@ -6,7 +6,7 @@ export interface AppSettings {
   id: string;
   shop: string;
   rapidApiKey: string | null;
-  amazonAffiliateId: string | null;
+  ebayAffiliateId: string | null;
   affiliateModeEnabled: boolean;
   buttonText: string;
   buttonEnabled: boolean;
@@ -26,8 +26,8 @@ export interface ImportedProduct {
   shopifyProductId: string;
   shopifyHandle: string | null;
   shopifyVariantId: string | null;
-  amazonUrl: string;
-  amazonAsin: string | null;
+  ebayUrl: string;
+  ebayItemId: string | null;
   title: string;
   description: string | null;
   price: number;
@@ -57,11 +57,11 @@ export type ButtonPosition =
   | "BEFORE_ADD_TO_CART";
 
 // ==========================================
-// Amazon Product Types
+// eBay Product Types
 // ==========================================
 
-export interface AmazonProductData {
-  asin: string;
+export interface EbayProductData {
+  itemId: string;
   title: string;
   description: string;
   link: string;
@@ -84,7 +84,7 @@ export interface AmazonProductData {
     name: string;
   }>;
   is_prime?: boolean;
-  is_amazon_choice?: boolean;
+  is_ebay_choice?: boolean;
   availability?: {
     status: string;
   };
@@ -111,7 +111,7 @@ export interface AmazonProductData {
 }
 
 export interface ScrapedProduct {
-  asin: string;
+  itemId: string;
   title: string;
   description: string;
   price: number;
@@ -119,19 +119,17 @@ export interface ScrapedProduct {
   images: string[];
   variants: ProductVariant[];
   options: ProductOption[];
-  amazonUrl: string;
+  ebayUrl: string;
   specifications?: Record<string, string>;
   bulletPoints?: string[];
   rating?: number;
   ratingsTotal?: number;
   categories?: string[];
-  isPrime?: boolean;
-  isAmazonChoice?: boolean;
   availability?: string;
 }
 
 export interface ProductVariant {
-  asin: string;
+  itemId: string;
   title?: string;
   price?: number;
   image?: string;
@@ -215,7 +213,7 @@ export interface PricingResult {
 // ==========================================
 
 export interface ImportFormData {
-  amazonUrl: string;
+  ebayUrl: string;
   importMode: ImportMode;
   markupType?: PricingMode;
   markupValue?: number;
@@ -225,7 +223,7 @@ export interface ImportFormData {
 
 export interface SettingsFormData {
   rapidApiKey: string;
-  amazonAffiliateId?: string;
+  ebayAffiliateId?: string;
   affiliateModeEnabled: boolean;
   buttonText: string;
   buttonEnabled: boolean;
@@ -263,7 +261,7 @@ export interface LoaderData<T = unknown> {
 // Error Types
 // ==========================================
 
-export class AmazonScraperError extends Error {
+export class EbayScraperError extends Error {
   constructor(
     message: string,
     public code:
@@ -274,7 +272,7 @@ export class AmazonScraperError extends Error {
       | "NETWORK_ERROR",
   ) {
     super(message);
-    this.name = "AmazonScraperError";
+    this.name = "EbayScraperError";
   }
 }
 

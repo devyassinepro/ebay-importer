@@ -48,9 +48,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
   const data = {
-    amazonAffiliateId: (formData.get("amazonAffiliateId") as string) || null,
+    ebayAffiliateId: (formData.get("ebayAffiliateId") as string) || null,
     affiliateModeEnabled: formData.get("affiliateModeEnabled") === "true",
-    buttonText: (formData.get("buttonText") as string) || "Buy on Amazon",
+    buttonText: (formData.get("buttonText") as string) || "Buy on eBay",
     buttonEnabled: formData.get("buttonEnabled") === "true",
     buttonPosition: (formData.get("buttonPosition") as string) || "AFTER_BUY_NOW",
     pricingMode: (formData.get("pricingMode") as string) || "MULTIPLIER",
@@ -76,7 +76,7 @@ export default function Settings() {
   const fetcher = useFetcher<typeof action>();
   const shopify = useAppBridge();
 
-  const [amazonAffiliateId, setAmazonAffiliateId] = useState(settings.amazonAffiliateId || "");
+  const [ebayAffiliateId, setEbayAffiliateId] = useState(settings.ebayAffiliateId || "");
   const [affiliateModeEnabled, setAffiliateModeEnabled] = useState(settings.affiliateModeEnabled);
   const [buttonText, setButtonText] = useState(settings.buttonText);
   const [buttonEnabled, setButtonEnabled] = useState(settings.buttonEnabled);
@@ -99,7 +99,7 @@ export default function Settings() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("amazonAffiliateId", amazonAffiliateId);
+    formData.append("ebayAffiliateId", ebayAffiliateId);
     formData.append("affiliateModeEnabled", affiliateModeEnabled.toString());
     formData.append("buttonText", buttonText);
     formData.append("buttonEnabled", buttonEnabled.toString());
@@ -123,7 +123,7 @@ export default function Settings() {
         {/* Header Banner */}
         <s-banner tone="info">
           <s-stack direction="block" gap="tight">
-            <s-text weight="semibold">Configure your Amazon Importer settings</s-text>
+            <s-text weight="semibold">Configure your eBay Importer settings</s-text>
             <s-paragraph>
               Set up your API keys, affiliate settings, and default pricing preferences below.
             </s-paragraph>
@@ -144,10 +144,10 @@ export default function Settings() {
             <div style={{ fontSize: "32px" }}>💡</div>
             <div style={{ flex: 1 }}>
               <h3 style={{ margin: "0 0 8px 0", fontSize: "18px", fontWeight: "600" }}>
-                Install the Amazon Buy Button in your theme
+                Install the eBay Buy Button in your theme
               </h3>
               <p style={{ margin: "0 0 12px 0", fontSize: "14px", opacity: 0.95, lineHeight: "1.5" }}>
-                To display the "Buy on Amazon" button on AFFILIATE products, you need to add the app block to your theme.
+                To display the "Buy on eBay" button on AFFILIATE products, you need to add the app block to your theme.
                 This is a one-time setup with step-by-step instructions and a direct link to your theme editor.
               </p>
               <a
@@ -179,13 +179,13 @@ export default function Settings() {
               <s-box padding="base" borderWidth="base" borderRadius="base" style={{ backgroundColor: "#f9fafb" }}>
                 <s-stack direction="block" gap="base">
                   <s-text variant="headingMd" weight="semibold">
-                    🟢 Amazon Affiliate Settings
+                    🟢 eBay Affiliate Settings
                   </s-text>
 
                   <s-banner tone="success">
                     <s-paragraph>
-                      <strong>Affiliate Mode</strong> allows you to earn commissions by redirecting customers to Amazon.
-                      A "Buy on Amazon" button will appear on your product pages with your affiliate ID.
+                      <strong>Affiliate Mode</strong> allows you to earn commissions by redirecting customers to eBay.
+                      A "Buy on eBay" button will appear on your product pages with your affiliate ID.
                     </s-paragraph>
                   </s-banner>
 
@@ -199,11 +199,11 @@ export default function Settings() {
                   {affiliateModeEnabled && (
                     <s-stack direction="block" gap="base" style={{ marginTop: "12px" }}>
                       <s-text-field
-                        label="Amazon Affiliate ID"
-                        value={amazonAffiliateId}
-                        onChange={(e: any) => setAmazonAffiliateId(e.target.value)}
-                        placeholder="your-affiliate-id-20"
-                        helptext="Your Amazon Associates affiliate tag (e.g., 'yourstore-20')"
+                        label="eBay Affiliate ID"
+                        value={ebayAffiliateId}
+                        onChange={(e: any) => setEbayAffiliateId(e.target.value)}
+                        placeholder="your-epn-campaign-id"
+                        helptext="Your eBay Partner Network campaign ID"
                       ></s-text-field>
 
                       <s-divider />
@@ -214,15 +214,15 @@ export default function Settings() {
                         label="Button Text"
                         value={buttonText}
                         onChange={(e: any) => setButtonText(e.target.value)}
-                        placeholder="Buy on Amazon"
-                        helptext="Customize the text that appears on the Amazon redirect button"
+                        placeholder="Buy on eBay"
+                        helptext="Customize the text that appears on the eBay redirect button"
                       ></s-text-field>
 
                       <s-checkbox
                         checked={buttonEnabled}
                         onChange={(e: any) => setButtonEnabled(e.target.checked)}
                       >
-                        Show "Buy on Amazon" button on product pages
+                        Show "Buy on eBay" button on product pages
                       </s-checkbox>
 
                       <s-select
@@ -238,7 +238,7 @@ export default function Settings() {
 
                       <s-banner tone="warning">
                         <s-paragraph>
-                          <strong>Note:</strong> Make sure you comply with Amazon Associates Program Operating Agreement.
+                          <strong>Note:</strong> Make sure you comply with eBay Partner Network Agreement.
                           You must disclose your affiliate relationship to customers.
                         </s-paragraph>
                       </s-banner>

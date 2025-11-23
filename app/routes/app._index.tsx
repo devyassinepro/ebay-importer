@@ -1,5 +1,5 @@
 /**
- * Amazon Importer - Main Import Page
+ * eBay Importer - Main Import Page
  * NO MODALS VERSION - Uses inline sections for better compatibility
  */
 
@@ -10,7 +10,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "~/shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { prisma } from "~/db.server";
-import { scrapeAmazonProduct } from "~/services/amazon-scraper.server";
+import { scrapeEbayProduct } from "~/services/ebay-scraper.server";
 import { createShopifyProduct } from "~/services/shopify-product.server";
 import { applyPricingMarkup } from "~/services/pricing.server";
 import type { ImportMode, PricingMode, ScrapedProduct } from "~/types";
@@ -240,9 +240,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === "scrape") {
-    const amazonUrl = formData.get("amazonUrl") as string;
-    if (!amazonUrl) {
-      return { error: "Amazon URL is required" };
+    const ebayUrl = formData.get("ebayUrl") as string;
+    if (!ebayUrl) {
+      return { error: "eBay URL is required" };
     }
 
     const settings = await prisma.appSettings.findUnique({
@@ -256,7 +256,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       };
     }
 
-    const result = await scrapeAmazonProduct(amazonUrl, rapidApiKey);
+    const result = await scrapeEbayProduct(ebayUrl, rapidApiKey);
     if (!result.success) {
       return { error: result.error };
     }
@@ -274,13 +274,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return {
       action: "scraped",
       productData: result.data,
-      amazonUrl,
+      ebayUrl,
     };
   }
 
   if (actionType === "import") {
     const productDataJson = formData.get("productData") as string;
-    const amazonUrl = formData.get("amazonUrl") as string;
+    const ebayUrl = formData.get("ebayUrl") as string;
     const shouldPublish = formData.get("publish") === "true";
     const collectionId = formData.get("collectionId") as string;
     const importMode = formData.get("importMode") as ImportMode;
@@ -319,7 +319,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const result = await createShopifyProduct(
       admin,
       productData,
-      amazonUrl,
+      ebayUrl,
       settings as any,
       shouldPublish,
       importMode,
@@ -353,8 +353,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         shopifyProductId: product.id,
         shopifyHandle: product.handle,
         shopifyVariantId: product.variants.edges[0]?.node?.id || null,
-        amazonUrl,
-        amazonAsin: productData.asin,
+        ebayUrl,
+        ebayItemId: productData.itemId,
         title: productData.title,
         description: productData.description || "",
         price: productData.price,
@@ -382,7 +382,7 @@ export default function Index() {
 
   const [showTermsBlocker, setShowTermsBlocker] = useState(!settings.termsAccepted);
   const [showVideoModal, setShowVideoModal] = useState(false);
-  const [amazonUrl, setAmazonUrl] = useState("");
+  const [ebayUrl, setEbayUrl] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [productData, setProductData] = useState<any>(null);
   const [importMode, setImportMode] = useState<ImportMode>(
@@ -451,7 +451,7 @@ export default function Index() {
     } else if (fetcher.data?.action === "imported") {
       shopify.toast.show("Product imported successfully! 🎉");
       setShowPreview(false);
-      setAmazonUrl("");
+      setEbayUrl("");
       setProductData(null);
     } else if (fetcher.data?.error) {
       shopify.toast.show(fetcher.data.error, { isError: true });
@@ -471,8 +471,8 @@ export default function Index() {
   }, [fetcher.data, shopify]);
 
   const handleFetchProduct = () => {
-    if (!amazonUrl.trim()) {
-      shopify.toast.show("Please enter an Amazon URL", { isError: true });
+    if (!ebayUrl.trim()) {
+      shopify.toast.show("Please enter an eBay URL", { isError: true });
       return;
     }
     if (!settings.termsAccepted) {
@@ -485,7 +485,7 @@ export default function Index() {
     setProductData(null);
     const formData = new FormData();
     formData.append("action", "scrape");
-    formData.append("amazonUrl", amazonUrl);
+    formData.append("ebayUrl", ebayUrl);
     fetcher.submit(formData, { method: "POST" });
   };
 
@@ -493,7 +493,7 @@ export default function Index() {
     const formData = new FormData();
     formData.append("action", "import");
     formData.append("productData", JSON.stringify(productData));
-    formData.append("amazonUrl", (fetcher.data as any)?.amazonUrl);
+    formData.append("ebayUrl", (fetcher.data as any)?.ebayUrl);
     formData.append("publish", (productStatus === "ACTIVE").toString());
     formData.append("collectionId", selectedCollection);
     formData.append("importMode", importMode);
@@ -530,7 +530,7 @@ export default function Index() {
         videoId="P7sNIYPlRiY"
       />
 
-      <s-page heading="📦 Import Amazon Products">
+      <s-page heading="📦 Import eBay Products">
         <s-button slot="primary-action" href="/app/history">
           📊 View History
         </s-button>
@@ -542,7 +542,7 @@ export default function Index() {
         <s-section>
           <s-stack direction="block" gap="base">
             <s-text tone="subdued">
-              Import products from Amazon to your Shopify store in Affiliate or Dropshipping mode.
+              Import products from eBay to your Shopify store in Affiliate or Dropshipping mode.
               Configure pricing, add to collections, and publish instantly.
             </s-text>
 
@@ -597,7 +597,7 @@ export default function Index() {
                     fontSize: "14px",
                   }}
                 >
-                  Learn how to import products from Amazon in 3 minutes
+                  Learn how to import products from eBay in 3 minutes
                 </p>
               </div>
             </div>
@@ -605,14 +605,14 @@ export default function Index() {
         </s-section>
 
                 {/* Step 1: Enter URL */}
-                <s-section heading="Step 1: Enter Amazon Product URL">
+                <s-section heading="Step 1: Enter eBay Product URL">
           <s-stack direction="block" gap="base">
             <s-text-field
-              label="Amazon Product URL"
-              value={amazonUrl}
-              onChange={(e: any) => setAmazonUrl(e.target.value)}
-              placeholder="https://www.amazon.com/dp/B08N5WRWNW"
-              helptext="Paste the full Amazon product URL (supports 12+ countries)"
+              label="eBay Product URL"
+              value={ebayUrl}
+              onChange={(e: any) => setEbayUrl(e.target.value)}
+              placeholder="https://www.ebay.com/itm/123456789"
+              helptext="Paste the full eBay product URL"
             />
 
             <s-stack direction="inline" gap="base">
@@ -674,8 +674,7 @@ export default function Index() {
                       {productData.variants && productData.variants.length > 1 && (
                         <s-badge tone="success">{productData.variants.length} variants</s-badge>
                       )}
-                      {productData.isPrime && <s-badge tone="info">Prime</s-badge>}
-                      {productData.isAmazonChoice && <s-badge tone="warning">Amazon's Choice</s-badge>}
+                      {productData.topRated && <s-badge tone="warning">Top Rated</s-badge>}
                     </s-stack>
 
                     {productData.rating && (
@@ -855,7 +854,7 @@ export default function Index() {
         <s-section slot="aside" heading="📖 How it Works">
           <s-ordered-list>
             <s-list-item>Accept the Terms of Importation</s-list-item>
-            <s-list-item>Paste Amazon product URL</s-list-item>
+            <s-list-item>Paste eBay product URL</s-list-item>
             <s-list-item>Click "Import Product"</s-list-item>
             <s-list-item>Choose Affiliate or Dropshipping mode</s-list-item>
             <s-list-item>Configure pricing (if Dropshipping)</s-list-item>
@@ -877,10 +876,10 @@ export default function Index() {
               <div style={{ fontSize: "48px" }}>💡</div>
             </div>
             <h3 style={{ margin: "0 0 12px 0", fontSize: "16px", fontWeight: "600", textAlign: "center" }}>
-              Don't forget to add the Amazon Buy Button!
+              Don't forget to add the eBay Buy Button!
             </h3>
             <p style={{ margin: "0 0 16px 0", fontSize: "13px", opacity: 0.95, lineHeight: "1.5", textAlign: "center" }}>
-              Install the app block in your theme to show the "Buy on Amazon" button on affiliate products.
+              Install the app block in your theme to show the "Buy on eBay" button on affiliate products.
             </p>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <s-button variant="primary" href="/app/setup">
@@ -892,7 +891,7 @@ export default function Index() {
 
         <s-section slot="aside" heading="✨ Features">
           <s-unordered-list>
-            <s-list-item>12+ Amazon marketplaces supported</s-list-item>
+            <s-list-item>Multiple eBay marketplaces supported</s-list-item>
             <s-list-item>Up to 250 variants per product</s-list-item>
             <s-list-item>Automatic image-to-variant linking</s-list-item>
             <s-list-item>Flexible pricing options</s-list-item>
@@ -904,7 +903,7 @@ export default function Index() {
         <s-section slot="aside" heading="💡 Quick Tips">
           <s-stack direction="block" gap="small">
             <s-paragraph size="small">
-              <strong>Affiliate Mode:</strong> Best for driving traffic to Amazon and earning commissions (1-10%).
+              <strong>Affiliate Mode:</strong> Best for driving traffic to eBay and earning commissions.
             </s-paragraph>
             <s-paragraph size="small">
               <strong>Dropshipping Mode:</strong> Best for direct sales with your own pricing and margins.

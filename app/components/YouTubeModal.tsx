@@ -60,7 +60,7 @@ export default function YouTubeModal({ show, onClose, videoId }: YouTubeModalPro
               color: "#202223",
             }}
           >
-            📺 How to Use Amazon Importer
+            📺 How to Use eBay Importer
           </h3>
           <button
             onClick={onClose}
@@ -104,7 +104,7 @@ export default function YouTubeModal({ show, onClose, videoId }: YouTubeModalPro
               height: "100%",
             }}
             src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
-            title="Amazon Importer Tutorial"
+            title="eBay Importer Tutorial"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

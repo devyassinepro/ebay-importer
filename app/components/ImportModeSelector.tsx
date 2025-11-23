@@ -65,7 +65,7 @@ export function ImportModeSelector({
             </s-radio-button>
 
             <s-paragraph tone="subdued" size="small">
-              Keep original Amazon price. Add "Buy on Amazon" button to product
+              Keep original eBay price. Add "Buy on eBay" button to product
               page. Earn commissions through your affiliate ID.
             </s-paragraph>
 
@@ -74,7 +74,7 @@ export function ImportModeSelector({
                 <s-paragraph>
                   <strong>Final Price:</strong> ${originalPrice.toFixed(2)} (no
                   markup)
-                  <br />A "Buy on Amazon" button will be added after the "Buy It
+                  <br />A "Buy on eBay" button will be added after the "Buy It
                   Now" button on your product page.
                 </s-paragraph>
               </s-banner>
@@ -105,7 +105,7 @@ export function ImportModeSelector({
             </s-radio-button>
 
             <s-paragraph tone="subdued" size="small">
-              Sell at your own price. No Amazon button. Perfect for traditional
+              Sell at your own price. No eBay button. Perfect for traditional
               dropshipping.
             </s-paragraph>
 

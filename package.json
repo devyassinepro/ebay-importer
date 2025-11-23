@@ -1,5 +1,5 @@
 {
-  "name": "amazon-importer",
+  "name": "ebay-importer",
   "private": true,
   "scripts": {
     "build": "react-router build",

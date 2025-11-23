@@ -1,6 +1,6 @@
 /**
  * Setup Instructions Page
- * Provides detailed instructions on how to install the Amazon Buy Button app block
+ * Provides detailed instructions on how to install the eBay Buy Button app block
  */
 
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function SetupPage() {
   const [copySuccess, setCopySuccess] = useState(false);
 
   // Generate deep link to theme editor
-  const themeEditorUrl = `https://${shop}/admin/themes/current/editor&template=product&activateAppId=fd2c0b3a-8f7e-e0d8-90a1-c35898eca7b1/amazon-button`;
+  const themeEditorUrl = `https://${shop}/admin/themes/current/editor&template=product&activateAppId=fd2c0b3a-8f7e-e0d8-90a1-c35898eca7b1/ebay-button`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(themeEditorUrl);
@@ -37,7 +37,7 @@ export default function SetupPage() {
           Setup Instructions
         </h1>
         <p style={{ fontSize: "14px", color: "#6d7175", lineHeight: "1.6" }}>
-          Follow these steps to add the "Buy on Amazon" button to your product pages
+          Follow these steps to add the "Buy on eBay" button to your product pages
         </p>
       </div>
 
@@ -213,7 +213,7 @@ export default function SetupPage() {
               <ul style={{ fontSize: "14px", color: "#6d7175", marginLeft: "20px", lineHeight: "1.8" }}>
                 <li>Click <strong>"Add block"</strong> or <strong>"Add section"</strong></li>
                 <li>Scroll to the <strong>"Apps"</strong> section</li>
-                <li>Look for <strong>"Amazon Buy Button"</strong></li>
+                <li>Look for <strong>"eBay Buy Button"</strong></li>
                 <li>Click to add it to your product page</li>
               </ul>
             </div>
@@ -248,7 +248,7 @@ export default function SetupPage() {
                 Position the Button
               </h3>
               <p style={{ fontSize: "14px", color: "#6d7175", marginBottom: "12px", lineHeight: "1.6" }}>
-                Drag the "Amazon Buy Button" block to your desired position. We recommend placing it:
+                Drag the "eBay Buy Button" block to your desired position. We recommend placing it:
               </p>
               <ul style={{ fontSize: "14px", color: "#6d7175", marginLeft: "20px", lineHeight: "1.8" }}>
                 <li>Below the <strong>"Add to Cart"</strong> button</li>
@@ -290,7 +290,7 @@ export default function SetupPage() {
                 Click on the block to customize:
               </p>
               <ul style={{ fontSize: "14px", color: "#6d7175", marginLeft: "20px", lineHeight: "1.8" }}>
-                <li><strong>Button Text:</strong> Change the text (default: "Buy on Amazon")</li>
+                <li><strong>Button Text:</strong> Change the text (default: "Buy on eBay")</li>
                 <li><strong>Colors:</strong> Background, hover, text, and border colors</li>
                 <li><strong>Styling:</strong> Font size, weight, border radius, padding</li>
                 <li><strong>Spacing:</strong> Top and bottom margins</li>
@@ -351,10 +351,10 @@ export default function SetupPage() {
             <strong>Automatic Display:</strong> The button only appears on products imported in <strong>AFFILIATE mode</strong>
           </li>
           <li>
-            <strong>No Manual Setup Required:</strong> The button automatically links to the Amazon product URL
+            <strong>No Manual Setup Required:</strong> The button automatically links to the eBay product URL
           </li>
           <li>
-            <strong>Full-Inventory Products:</strong> Products imported with inventory do NOT show the Amazon button
+            <strong>Full-Inventory Products:</strong> Products imported with inventory do NOT show the eBay button
           </li>
           <li>
             <strong>Theme Compatibility:</strong> Works with all Shopify themes that support app blocks
@@ -375,16 +375,16 @@ export default function SetupPage() {
         }}>
           <ol style={{ fontSize: "14px", color: "#6d7175", marginLeft: "20px", lineHeight: "1.8" }}>
             <li style={{ marginBottom: "12px" }}>
-              When you import a product in <strong>AFFILIATE mode</strong>, we save the Amazon URL as a product metafield
+              When you import a product in <strong>AFFILIATE mode</strong>, we save the eBay URL as a product metafield
             </li>
             <li style={{ marginBottom: "12px" }}>
-              The Amazon Buy Button block checks if the product has this metafield
+              The eBay Buy Button block checks if the product has this metafield
             </li>
             <li style={{ marginBottom: "12px" }}>
-              If the metafield exists, the button is displayed with the Amazon link
+              If the metafield exists, the button is displayed with the eBay link
             </li>
             <li>
-              Customers click the button and are redirected to Amazon to complete their purchase
+              Customers click the button and are redirected to eBay to complete their purchase
             </li>
           </ol>
         </div>

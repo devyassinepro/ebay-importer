@@ -8,7 +8,7 @@ import type { LoaderFunctionArgs } from "react-router";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   return {
     lastUpdated: "2025-10-20",
-    appName: "Amazon Importer",
+    appName: "eBay Importer",
     contactEmail: "devyassinepro@gmail.com"
   };
 };
@@ -27,18 +27,18 @@ export default function PrivacyPolicy() {
 
       <h2>1. Information We Collect</h2>
       <p>
-        When you use Amazon Importer, we collect the following information:
+        When you use eBay Importer, we collect the following information:
       </p>
       <ul>
         <li><strong>Shop Information:</strong> Your shop domain, plan details, and usage statistics</li>
-        <li><strong>Product Data:</strong> Product titles, prices, images, and descriptions from Amazon</li>
+        <li><strong>Product Data:</strong> Product titles, prices, images, and descriptions from eBay</li>
         <li><strong>Usage Data:</strong> How you interact with our app, features used, and performance metrics</li>
         <li><strong>Technical Data:</strong> IP address, browser type, and device information</li>
       </ul>
 
       <h2>2. How We Use Your Information</h2>
       <ul>
-        <li>Provide and maintain the Amazon product import service</li>
+        <li>Provide and maintain the eBay product import service</li>
         <li>Process your product imports and track usage quotas</li>
         <li>Send important service notifications and updates</li>
         <li>Improve our app's functionality and user experience</li>
@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
         <li>When required by law</li>
         <li>To protect our rights and safety</li>
         <li>With your explicit consent</li>
-        <li>With Amazon (as required for affiliate program compliance)</li>
+        <li>With eBay (as required for affiliate program compliance)</li>
       </ul>
 
       <h2>5. Your Rights (GDPR)</h2>
@@ -107,7 +107,7 @@ export default function PrivacyPolicy() {
         textAlign: "center",
         color: "#666"
       }}>
-        <p>© 2025 Amazon Importer. All rights reserved.</p>
+        <p>© 2025 eBay Importer. All rights reserved.</p>
       </div>
     </div>
   );

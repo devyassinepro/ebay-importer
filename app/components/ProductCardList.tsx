@@ -16,7 +16,7 @@ interface ProductCardListProps {
     variantCount: number;
     createdAt: string;
     shopifyProductId: string;
-    amazonUrl: string;
+    ebayUrl: string;
   };
   shop: string;
 }
@@ -30,8 +30,8 @@ export default function ProductCardList({ product, shop }: ProductCardListProps)
     window.open(`https://${shop}/admin/products/${productId}`, "_blank");
   };
 
-  const handleViewAmazon = () => {
-    window.open(product.amazonUrl, "_blank");
+  const handleViewEbay = () => {
+    window.open(product.ebayUrl, "_blank");
   };
 
   return (
@@ -213,7 +213,7 @@ export default function ProductCardList({ product, shop }: ProductCardListProps)
           <s-button onClick={handleViewShopify} style={{ flex: 1 }}>
             View in Shopify
           </s-button>
-          <s-button onClick={handleViewAmazon}>🔗</s-button>
+          <s-button onClick={handleViewEbay}>🔗</s-button>
         </div>
       </div>
     </div>

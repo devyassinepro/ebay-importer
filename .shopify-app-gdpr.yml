@@ -4,17 +4,17 @@
 webhooks:
   # Customer Data Request (GDPR Article 15)
   - topic: customers/data_request
-    address: https://amazonimporter-app-zffzk.ondigitalocean.app/webhooks/customers/data_request
+    address: https://ebayimporter-app.ondigitalocean.app/webhooks/customers/data_request
     format: json
 
   # Customer Data Erasure (GDPR Article 17)
   - topic: customers/redact
-    address: https://amazonimporter-app-zffzk.ondigitalocean.app/webhooks/customers/redact
+    address: https://ebayimporter-app.ondigitalocean.app/webhooks/customers/redact
     format: json
 
   # Shop Data Erasure (48h after uninstall)
   - topic: shop/redact
-    address: https://amazonimporter-app-zffzk.ondigitalocean.app/webhooks/shop/redact
+    address: https://ebayimporter-app.ondigitalocean.app/webhooks/shop/redact
     format: json
 
 # Note: These webhooks are automatically verified by Shopify during app review

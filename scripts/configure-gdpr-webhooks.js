@@ -9,7 +9,7 @@
  * Usage: node scripts/configure-gdpr-webhooks.js
  */
 
-const APP_URL = "https://amazonimporter-app-zffzk.ondigitalocean.app";
+const APP_URL = "https://ebayimporter-app.ondigitalocean.app";
 
 const GDPR_WEBHOOKS = [
   {
@@ -29,7 +29,7 @@ const GDPR_WEBHOOKS = [
   }
 ];
 
-console.log('\n🔐 GDPR Webhook Configuration for Amazon Importer\n');
+console.log('\n🔐 GDPR Webhook Configuration for eBay Importer\n');
 console.log('═'.repeat(60));
 console.log('\n📋 Required GDPR Webhooks:\n');
 
@@ -42,7 +42,7 @@ GDPR_WEBHOOKS.forEach((webhook, index) => {
 console.log('═'.repeat(60));
 console.log('\n📝 Manual Configuration Steps:\n');
 console.log('1. Go to: https://partners.shopify.com/');
-console.log('2. Select your app: "Amazon Importer"');
+console.log('2. Select your app: "eBay Importer"');
 console.log('3. Navigate to: App setup → Webhooks');
 console.log('4. Add each webhook listed above\n');
 

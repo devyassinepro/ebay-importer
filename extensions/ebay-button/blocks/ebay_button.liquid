@@ -1,16 +1,16 @@
 {% comment %}
-  Amazon Buy Button Block
-  This block displays a "Buy on Amazon" button ONLY for products imported in AFFILIATE mode
+  eBay Buy Button Block
+  This block displays a "Buy on eBay" button ONLY for products imported in AFFILIATE mode
 {% endcomment %}
 
-{% comment %} Check if product has Amazon URL AND is in affiliate mode {% endcomment %}
-{% if product.metafields.amazon_importer.amazon_url != blank and product.metafields.amazon_importer.import_mode == 'AFFILIATE' %}
-  <div class="amazon-buy-button-wrapper" style="margin: {{ block.settings.margin_top }}px 0 {{ block.settings.margin_bottom }}px 0;">
+{% comment %} Check if product has eBay URL AND is in affiliate mode {% endcomment %}
+{% if product.metafields.ebay_importer.ebay_url != blank and product.metafields.ebay_importer.import_mode == 'AFFILIATE' %}
+  <div class="ebay-buy-button-wrapper" style="margin: {{ block.settings.margin_top }}px 0 {{ block.settings.margin_bottom }}px 0;">
     <a
-      href="{{ product.metafields.amazon_importer.amazon_url }}"
+      href="{{ product.metafields.ebay_importer.ebay_url }}"
       target="_blank"
       rel="noopener noreferrer sponsored"
-      class="amazon-buy-button"
+      class="ebay-buy-button"
       style="
         display: inline-block;
         padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
@@ -27,7 +27,7 @@
       onmouseover="this.style.backgroundColor='{{ block.settings.button_hover_color }}'; this.style.transform='scale(1.05)';"
       onmouseout="this.style.backgroundColor='{{ block.settings.button_background_color }}'; this.style.transform='scale(1)';"
     >
-      {{ block.settings.button_text | default: 'Buy on Amazon' }}
+      {{ block.settings.button_text | default: 'Buy on eBay' }}
     </a>
 
     {% if block.settings.show_disclaimer %}
@@ -40,26 +40,26 @@
 
 {% schema %}
 {
-  "name": "Amazon Buy Button",
+  "name": "eBay Buy Button",
   "target": "section",
   "settings": [
     {
       "type": "text",
       "id": "button_text",
       "label": "Button Text",
-      "default": "Buy on Amazon"
+      "default": "Buy on eBay"
     },
     {
       "type": "color",
       "id": "button_background_color",
       "label": "Button Background Color",
-      "default": "#FF9900"
+      "default": "#0064D2"
     },
     {
       "type": "color",
       "id": "button_hover_color",
       "label": "Button Hover Color",
-      "default": "#FA8900"
+      "default": "#0053B3"
     },
     {
       "type": "color",
@@ -71,7 +71,7 @@
       "type": "color",
       "id": "button_border_color",
       "label": "Button Border Color",
-      "default": "#FF9900"
+      "default": "#0064D2"
     },
     {
       "type": "range",

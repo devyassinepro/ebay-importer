@@ -34,9 +34,9 @@ model Session {
 model AppSettings {
   id                       String   @id @default(uuid())
   shop                     String   @unique
-  amazonAffiliateId        String?
+  ebayAffiliateId          String?
   affiliateModeEnabled     Boolean  @default(false)
-  buttonText               String   @default("Buy on Amazon")
+  buttonText               String   @default("Buy on eBay")
   buttonEnabled            Boolean  @default(true)
   buttonPosition           String   @default("AFTER_BUY_NOW") // AFTER_BUY_NOW or BEFORE_BUY_NOW
   pricingMode              String   @default("MULTIPLIER") // MULTIPLIER or FIXED
@@ -64,12 +64,12 @@ model ImportedProduct {
   shopifyProductId  String
   shopifyHandle     String?  // Product handle for easy linking
   shopifyVariantId  String?
-  amazonUrl         String
-  amazonAsin        String?
+  ebayUrl           String
+  ebayItemId        String?
   title             String
   description       String?
   price             Float    // Final price in Shopify
-  originalPrice     Float    // Original Amazon price
+  originalPrice     Float    // Original eBay price
   markup            Float?   // Markup applied (value or percentage)
   markupType        String?  // FIXED or PERCENTAGE
   importMode        String   @default("DROPSHIPPING") // AFFILIATE or DROPSHIPPING

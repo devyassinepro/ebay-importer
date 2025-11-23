@@ -8,7 +8,7 @@ import type { LoaderFunctionArgs } from "react-router";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   return {
     lastUpdated: "2025-10-20",
-    appName: "Amazon Importer",
+    appName: "eBay Importer",
     contactEmail: "devyassinepro@gmail.com"
   };
 };
@@ -27,20 +27,20 @@ export default function TermsOfService() {
 
       <h2>1. Acceptance of Terms</h2>
       <p>
-        By installing and using Amazon Importer, you agree to be bound by these Terms of Service.
+        By installing and using eBay Importer, you agree to be bound by these Terms of Service.
         If you do not agree to these terms, do not use our service.
       </p>
 
       <h2>2. Description of Service</h2>
       <p>
-        Amazon Importer is a Shopify application that allows merchants to:
+        eBay Importer is a Shopify application that allows merchants to:
       </p>
       <ul>
-        <li>Import products from Amazon to Shopify</li>
+        <li>Import products from eBay to Shopify</li>
         <li>Apply pricing markups and modifications</li>
         <li>Manage product variants and images</li>
         <li>Track imported products and history</li>
-        <li>Use Amazon affiliate links (optional)</li>
+        <li>Use eBay affiliate links (optional)</li>
       </ul>
 
       <h2>3. Subscription Plans and Billing</h2>
@@ -61,13 +61,13 @@ export default function TermsOfService() {
         <li>Downgrades take effect at the end of your billing period</li>
       </ul>
 
-      <h2>4. Amazon Compliance</h2>
+      <h2>4. eBay Compliance</h2>
       <p>You agree to:</p>
       <ul>
-        <li>Comply with Amazon's Terms of Service</li>
-        <li>Follow Amazon Associate Program Operating Agreement (if using affiliate mode)</li>
+        <li>Comply with eBay's Terms of Service</li>
+        <li>Follow eBay Partner Network Agreement (if using affiliate mode)</li>
         <li>Not misrepresent products or prices</li>
-        <li>Not use Amazon trademarks without permission</li>
+        <li>Not use eBay trademarks without permission</li>
         <li>Maintain accurate product information</li>
       </ul>
 
@@ -88,7 +88,7 @@ export default function TermsOfService() {
         When using dropshipping mode, you are responsible for:
       </p>
       <ul>
-        <li>Fulfilling orders with actual Amazon products</li>
+        <li>Fulfilling orders with actual eBay products</li>
         <li>Maintaining adequate inventory tracking</li>
         <li>Handling customer service and returns</li>
         <li>Complying with your local laws and regulations</li>
@@ -99,10 +99,10 @@ export default function TermsOfService() {
         When using affiliate mode, you must:
       </p>
       <ul>
-        <li>Have an active Amazon Associates account</li>
+        <li>Have an active eBay Partner Network account</li>
         <li>Display proper affiliate disclosures</li>
-        <li>Comply with Amazon's affiliate program rules</li>
-        <li>Not sell products directly (button redirects to Amazon)</li>
+        <li>Comply with eBay's affiliate program rules</li>
+        <li>Not sell products directly (button redirects to eBay)</li>
       </ul>
 
       <h2>7. Data and Privacy</h2>
@@ -113,14 +113,14 @@ export default function TermsOfService() {
 
       <h2>8. Limitation of Liability</h2>
       <p>
-        Amazon Importer is provided "as is" without warranties. We are not liable for:
+        eBay Importer is provided "as is" without warranties. We are not liable for:
       </p>
       <ul>
         <li>Data loss or import errors</li>
         <li>Service interruptions</li>
         <li>Lost profits or business opportunities</li>
         <li>Indirect or consequential damages</li>
-        <li>Amazon API changes or restrictions</li>
+        <li>eBay API changes or restrictions</li>
         <li>Product availability or pricing changes</li>
       </ul>
 
@@ -162,7 +162,7 @@ export default function TermsOfService() {
         textAlign: "center",
         color: "#666"
       }}>
-        <p>© 2025 Amazon Importer. All rights reserved.</p>
+        <p>© 2025 eBay Importer. All rights reserved.</p>
       </div>
     </div>
   );

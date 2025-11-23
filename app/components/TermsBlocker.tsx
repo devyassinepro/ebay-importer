@@ -54,7 +54,7 @@ export default function TermsBlocker({ show, onAccept }: TermsBlockerProps) {
               color: "#202223",
             }}
           >
-           Amazon Importer - Terms & Conditions
+           eBay Importer - Terms & Conditions
           </h2>
         </div>
 
@@ -65,7 +65,7 @@ export default function TermsBlocker({ show, onAccept }: TermsBlockerProps) {
             {/* Introduction */}
             <s-stack direction="block" gap="small">
               <s-text weight="semibold" size="large">
-              By using Amazon Importer, you agree to the following terms and conditions:
+              By using eBay Importer, you agree to the following terms and conditions:
               </s-text>
               <s-paragraph tone="subdued">
                  <s-unordered-list>

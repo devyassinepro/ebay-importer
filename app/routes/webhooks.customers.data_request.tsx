@@ -30,7 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(`Customer data request payload:`, payload);
 
   try {
-    // For Amazon Importer, we don't store customer personal data
+    // For eBay Importer, we don't store customer personal data
     // We only store shop data and product information
 
     // If you stored any customer data (emails, names, addresses, etc.),
@@ -44,10 +44,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     // Log the request for compliance records
     console.log(`✅ Customer data request processed for ${shop}`);
-    console.log(`Note: Amazon Importer does not store customer personal data`);
+    console.log(`Note: eBay Importer does not store customer personal data`);
 
     return new Response(JSON.stringify({
-      message: "Amazon Importer does not store customer personal data",
+      message: "eBay Importer does not store customer personal data",
       timestamp: new Date().toISOString()
     }), {
       status: 200,

@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "3a811626e23613464cb593fcadac31b3"
-name = "DropAffilate : Amazon Importer"
-application_url = "https://amazonimporter-app-zffzk.ondigitalocean.app"
+name = "DropAffilate : eBay Importer"
+application_url = "https://ebayimporter-app.ondigitalocean.app"
 embedded = true
 
 [build]
@@ -36,12 +36,12 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://amazonimporter-app-zffzk.ondigitalocean.app/auth/callback",
-  "https://amazonimporter-app-zffzk.ondigitalocean.app/auth/shopify/callback",
-  "https://amazonimporter-app-zffzk.ondigitalocean.app/api/auth/callback"
+  "https://ebayimporter-app.ondigitalocean.app/auth/callback",
+  "https://ebayimporter-app.ondigitalocean.app/auth/shopify/callback",
+  "https://ebayimporter-app.ondigitalocean.app/api/auth/callback"
 ]
 
-# Legal URLs for App Store approval  
-privacy_policy_url = "https://amazonimporter-app-zffzk.ondigitalocean.app/privacy-policy"
-terms_of_service_url = "https://amazonimporter-app-zffzk.ondigitalocean.app/terms-of-service"
-support_url = "https://amazonimporter-app-zffzk.ondigitalocean.app/support"
+# Legal URLs for App Store approval
+privacy_policy_url = "https://ebayimporter-app.ondigitalocean.app/privacy-policy"
+terms_of_service_url = "https://ebayimporter-app.ondigitalocean.app/terms-of-service"
+support_url = "https://ebayimporter-app.ondigitalocean.app/support"

@@ -12,7 +12,7 @@ export interface BillingPlan {
   interval: "EVERY_30_DAYS" | "ANNUAL";
   productLimit: number;
   features: {
-    buyOnAmazonButton: boolean;
+    buyOnEbayButton: boolean;
     dropshippingAllowed: boolean;
   };
   popular?: boolean;
@@ -27,7 +27,7 @@ export const BILLING_PLANS: Record<PlanName, BillingPlan> = {
     interval: "EVERY_30_DAYS",
     productLimit: 20,
     features: {
-      buyOnAmazonButton: false,
+      buyOnEbayButton: false,
       dropshippingAllowed: true,
     },
     description: "Perfect for testing and small catalogs",
@@ -39,7 +39,7 @@ export const BILLING_PLANS: Record<PlanName, BillingPlan> = {
     interval: "EVERY_30_DAYS",
     productLimit: 150,
     features: {
-      buyOnAmazonButton: true,
+      buyOnEbayButton: true,
       dropshippingAllowed: true,
     },
     description: "Great for growing stores",
@@ -51,7 +51,7 @@ export const BILLING_PLANS: Record<PlanName, BillingPlan> = {
     interval: "EVERY_30_DAYS",
     productLimit: 1000,
     features: {
-      buyOnAmazonButton: true,
+      buyOnEbayButton: true,
       dropshippingAllowed: true,
     },
     popular: true,
@@ -64,7 +64,7 @@ export const BILLING_PLANS: Record<PlanName, BillingPlan> = {
     interval: "EVERY_30_DAYS",
     productLimit: 3000,
     features: {
-      buyOnAmazonButton: true,
+      buyOnEbayButton: true,
       dropshippingAllowed: true,
     },
     description: "For large scale operations",
