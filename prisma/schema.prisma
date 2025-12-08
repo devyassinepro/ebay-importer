@@ -34,14 +34,8 @@ model Session {
 model AppSettings {
   id                       String   @id @default(uuid())
   shop                     String   @unique
-  ebayAffiliateId          String?
-  affiliateModeEnabled     Boolean  @default(false)
-  buttonText               String   @default("Buy on eBay")
-  buttonEnabled            Boolean  @default(true)
-  buttonPosition           String   @default("AFTER_BUY_NOW") // AFTER_BUY_NOW or BEFORE_BUY_NOW
   pricingMode              String   @default("MULTIPLIER") // MULTIPLIER or FIXED
   pricingValue             Float    @default(1.0)
-  defaultImportMode        String   @default("DROPSHIPPING") // AFFILIATE or DROPSHIPPING
   defaultCollectionId      String?  // Default collection to add products to
   autoPublish              Boolean  @default(false) // Auto-publish imported products
   termsAccepted            Boolean  @default(false)
@@ -72,7 +66,6 @@ model ImportedProduct {
   originalPrice     Float    // Original eBay price
   markup            Float?   // Markup applied (value or percentage)
   markupType        String?  // FIXED or PERCENTAGE
-  importMode        String   @default("DROPSHIPPING") // AFFILIATE or DROPSHIPPING
   productImage      String?  // Main product image URL
   images            String?  // JSON array of all image URLs
   variantCount      Int      @default(1)
@@ -83,5 +76,4 @@ model ImportedProduct {
   @@index([shop])
   @@index([shopifyProductId])
   @@index([createdAt])
-  @@index([importMode])
 }

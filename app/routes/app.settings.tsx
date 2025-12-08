@@ -35,10 +35,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 
   const collectionsData = await collectionsResponse.json();
-  const collections = collectionsData.data.collections.edges.map((edge: any) => ({
+
+  console.log("=== COLLECTIONS DEBUG ===");
+  console.log("Collections Response:", JSON.stringify(collectionsData, null, 2));
+
+  const collections = collectionsData.data?.collections?.edges?.map((edge: any) => ({
     id: edge.node.id,
     title: edge.node.title,
-  }));
+  })) || [];
+
+  console.log("Mapped Collections:", collections);
+  console.log("Total Collections:", collections.length);
 
   return { settings, collections };
 };
@@ -48,14 +55,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
   const data = {
-    ebayAffiliateId: (formData.get("ebayAffiliateId") as string) || null,
-    affiliateModeEnabled: formData.get("affiliateModeEnabled") === "true",
-    buttonText: (formData.get("buttonText") as string) || "Buy on eBay",
-    buttonEnabled: formData.get("buttonEnabled") === "true",
-    buttonPosition: (formData.get("buttonPosition") as string) || "AFTER_BUY_NOW",
     pricingMode: (formData.get("pricingMode") as string) || "MULTIPLIER",
     pricingValue: parseFloat((formData.get("pricingValue") as string) || "1.0"),
-    defaultImportMode: (formData.get("defaultImportMode") as string) || "DROPSHIPPING",
     defaultCollectionId: (formData.get("defaultCollectionId") as string) || null,
     autoPublish: formData.get("autoPublish") === "true",
     termsAccepted: formData.get("termsAccepted") === "true",
@@ -76,14 +77,12 @@ export default function Settings() {
   const fetcher = useFetcher<typeof action>();
   const shopify = useAppBridge();
 
-  const [ebayAffiliateId, setEbayAffiliateId] = useState(settings.ebayAffiliateId || "");
-  const [affiliateModeEnabled, setAffiliateModeEnabled] = useState(settings.affiliateModeEnabled);
-  const [buttonText, setButtonText] = useState(settings.buttonText);
-  const [buttonEnabled, setButtonEnabled] = useState(settings.buttonEnabled);
-  const [buttonPosition, setButtonPosition] = useState(settings.buttonPosition);
+  console.log("=== SETTINGS COMPONENT DEBUG ===");
+  console.log("Collections received:", collections);
+  console.log("Collections count:", collections?.length);
+
   const [pricingMode, setPricingMode] = useState(settings.pricingMode);
   const [pricingValue, setPricingValue] = useState(settings.pricingValue);
-  const [defaultImportMode, setDefaultImportMode] = useState(settings.defaultImportMode);
   const [defaultCollectionId, setDefaultCollectionId] = useState(settings.defaultCollectionId || "");
   const [autoPublish, setAutoPublish] = useState(settings.autoPublish || false);
   const [termsAccepted, setTermsAccepted] = useState(settings.termsAccepted);
@@ -99,14 +98,8 @@ export default function Settings() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("ebayAffiliateId", ebayAffiliateId);
-    formData.append("affiliateModeEnabled", affiliateModeEnabled.toString());
-    formData.append("buttonText", buttonText);
-    formData.append("buttonEnabled", buttonEnabled.toString());
-    formData.append("buttonPosition", buttonPosition);
     formData.append("pricingMode", pricingMode);
     formData.append("pricingValue", pricingValue.toString());
-    formData.append("defaultImportMode", defaultImportMode);
     formData.append("defaultCollectionId", defaultCollectionId);
     formData.append("autoPublish", autoPublish.toString());
     formData.append("termsAccepted", termsAccepted.toString());
@@ -175,80 +168,7 @@ export default function Settings() {
         <form onSubmit={handleSubmit}>
           <s-stack direction="block" gap="base">
             {/* 1. Affiliate Settings */}
-            <s-section>
-              <s-box padding="base" borderWidth="base" borderRadius="base" style={{ backgroundColor: "#f9fafb" }}>
-                <s-stack direction="block" gap="base">
-                  <s-text variant="headingMd" weight="semibold">
-                    🟢 eBay Affiliate Settings
-                  </s-text>
-
-                  <s-banner tone="success">
-                    <s-paragraph>
-                      <strong>Affiliate Mode</strong> allows you to earn commissions by redirecting customers to eBay.
-                      A "Buy on eBay" button will appear on your product pages with your affiliate ID.
-                    </s-paragraph>
-                  </s-banner>
-
-                  <s-checkbox
-                    checked={affiliateModeEnabled}
-                    onChange={(e: any) => setAffiliateModeEnabled(e.target.checked)}
-                  >
-                    <s-text weight="semibold">Enable Affiliate Mode by Default</s-text>
-                  </s-checkbox>
-
-                  {affiliateModeEnabled && (
-                    <s-stack direction="block" gap="base" style={{ marginTop: "12px" }}>
-                      <s-text-field
-                        label="eBay Affiliate ID"
-                        value={ebayAffiliateId}
-                        onChange={(e: any) => setEbayAffiliateId(e.target.value)}
-                        placeholder="your-epn-campaign-id"
-                        helptext="Your eBay Partner Network campaign ID"
-                      ></s-text-field>
-
-                      <s-divider />
-
-                      <s-text weight="semibold" size="large">Button Customization</s-text>
-
-                      <s-text-field
-                        label="Button Text"
-                        value={buttonText}
-                        onChange={(e: any) => setButtonText(e.target.value)}
-                        placeholder="Buy on eBay"
-                        helptext="Customize the text that appears on the eBay redirect button"
-                      ></s-text-field>
-
-                      <s-checkbox
-                        checked={buttonEnabled}
-                        onChange={(e: any) => setButtonEnabled(e.target.checked)}
-                      >
-                        Show "Buy on eBay" button on product pages
-                      </s-checkbox>
-
-                      <s-select
-                        label="Button Position"
-                        value={buttonPosition}
-                        onChange={(e: any) => setButtonPosition(e.target.value)}
-                        helptext="Choose where the button should appear on your product pages"
-                      >
-                        <option value="BEFORE_BUY_NOW">📍 Before "Buy Now" button</option>
-                        <option value="AFTER_BUY_NOW">📍 After "Buy Now" button (recommended)</option>
-                        <option value="AFTER_ADD_TO_CART">📍 After "Add to Cart" button</option>
-                      </s-select>
-
-                      <s-banner tone="warning">
-                        <s-paragraph>
-                          <strong>Note:</strong> Make sure you comply with eBay Partner Network Agreement.
-                          You must disclose your affiliate relationship to customers.
-                        </s-paragraph>
-                      </s-banner>
-                    </s-stack>
-                  )}
-                </s-stack>
-              </s-box>
-            </s-section>
-
-            {/* 3. Pricing Settings */}
+            {/* 2. Pricing Settings */}
             <s-section>
               <s-box padding="base" borderWidth="base" borderRadius="base" style={{ backgroundColor: "#f9fafb" }}>
                 <s-stack direction="block" gap="base">
@@ -292,7 +212,7 @@ export default function Settings() {
                             <s-stack direction="block" gap="tight">
                               <s-text weight="semibold" size="large">📊 Percentage Markup</s-text>
                               <s-paragraph>
-                                Multiply the Amazon price by a factor. Perfect for maintaining consistent profit margins.
+                                Multiply the eBay price by a factor. Perfect for maintaining consistent profit margins.
                               </s-paragraph>
                               <s-paragraph tone="subdued" size="small">
                                 Example: 1.5 = 50% markup | 2.0 = 100% markup | 1.3 = 30% markup
@@ -325,7 +245,7 @@ export default function Settings() {
                             <s-stack direction="block" gap="tight">
                               <s-text weight="semibold" size="large">💵 Fixed Amount</s-text>
                               <s-paragraph>
-                                Add a fixed dollar amount to the Amazon price. Good for consistent profit per item.
+                                Add a fixed dollar amount to the eBay price. Good for consistent profit per item.
                               </s-paragraph>
                               <s-paragraph tone="subdued" size="small">
                                 Example: $10 = Add $10 to every product | $5.50 = Add $5.50 to every product
@@ -347,7 +267,7 @@ export default function Settings() {
                       helptext={
                         pricingMode === "MULTIPLIER"
                           ? "Enter a multiplier (1.0 = no markup, 1.5 = 50% markup, 2.0 = 100% markup)"
-                          : "Enter the dollar amount to add to the Amazon price (e.g., 10.00 for $10)"
+                          : "Enter the dollar amount to add to the eBay price (e.g., 10.00 for $10)"
                       }
                     ></s-text-field>
 
@@ -355,7 +275,7 @@ export default function Settings() {
                     {pricingMode === "MULTIPLIER" && pricingValue > 1 && (
                       <s-banner tone="success">
                         <s-text>
-                          <strong>Preview:</strong> Amazon price of $100.00 → Your price: $
+                          <strong>Preview:</strong> eBay price of $100.00 → Your price: $
                           {(100 * pricingValue).toFixed(2)} (
                           {((pricingValue - 1) * 100).toFixed(0)}% markup)
                         </s-text>
@@ -364,24 +284,11 @@ export default function Settings() {
                     {pricingMode === "FIXED" && pricingValue > 0 && (
                       <s-banner tone="success">
                         <s-text>
-                          <strong>Preview:</strong> Amazon price of $100.00 → Your price: $
+                          <strong>Preview:</strong> eBay price of $100.00 → Your price: $
                           {(100 + pricingValue).toFixed(2)} (+${pricingValue.toFixed(2)})
                         </s-text>
                       </s-banner>
                     )}
-
-                    <s-divider />
-
-                    {/* Default Import Mode */}
-                    <s-select
-                      label="Default Import Mode"
-                      value={defaultImportMode}
-                      onChange={(e: any) => setDefaultImportMode(e.target.value)}
-                      helptext="Choose the default mode when importing new products"
-                    >
-                      <option value="DROPSHIPPING">🛒 Dropshipping (custom pricing, direct sales)</option>
-                      <option value="AFFILIATE">🟢 Affiliate (original price, earn commissions)</option>
-                    </s-select>
                   </s-stack>
                 </s-stack>
               </s-box>
@@ -460,7 +367,7 @@ export default function Settings() {
                   <s-banner tone="warning">
                     <s-paragraph>
                       By using this application, you acknowledge that you have read and agree to comply with all
-                      applicable laws and Amazon's policies regarding product imports and resale.
+                      applicable laws and eBay's policies regarding product imports and resale.
                     </s-paragraph>
                   </s-banner>
 
@@ -469,7 +376,7 @@ export default function Settings() {
                     onChange={(e: any) => setTermsAccepted(e.target.checked)}
                   >
                     <s-text weight="semibold">
-                      I accept the Terms & Conditions for importing Amazon products
+                      I accept the Terms & Conditions for importing eBay products
                     </s-text>
                   </s-checkbox>
 

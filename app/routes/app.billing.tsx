@@ -306,7 +306,7 @@ export default function BillingPage() {
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      {plan.features.buyOnAmazonButton ? (
+                      {plan.features.buyOnEbayButton ? (
                         <span style={{ color: "#008060" }}>✅</span>
                       ) : (
                         <span style={{ color: "#bf0711" }}>❌</span>

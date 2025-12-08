@@ -283,7 +283,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const ebayUrl = formData.get("ebayUrl") as string;
     const shouldPublish = formData.get("publish") === "true";
     const collectionId = formData.get("collectionId") as string;
-    const importMode = formData.get("importMode") as ImportMode;
     const markupValue = parseFloat(formData.get("markupValue") as string || "0");
     const markupType = formData.get("markupType") as PricingMode;
 
@@ -302,27 +301,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     const productData: ScrapedProduct = JSON.parse(productDataJson);
-    const settings = await prisma.appSettings.findUnique({
-      where: { shop: session.shop },
-    });
 
-    // Recalculate price with user-selected markup
+    // Apply pricing markup
     const originalPrice = (productData as any).originalPrice || productData.price;
-    if (importMode === "DROPSHIPPING") {
-      const finalPrice = applyPricingMarkup(originalPrice, markupType, markupValue);
-      productData.price = finalPrice;
-    } else {
-      // Affiliate mode: keep original price
-      productData.price = originalPrice;
-    }
+    const finalPrice = applyPricingMarkup(originalPrice, markupType, markupValue);
+    productData.price = finalPrice;
 
     const result = await createShopifyProduct(
       admin,
       productData,
       ebayUrl,
-      settings as any,
       shouldPublish,
-      importMode,
     );
     if (!result.success) {
       return { error: result.error };
@@ -385,9 +374,6 @@ export default function Index() {
   const [ebayUrl, setEbayUrl] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [productData, setProductData] = useState<any>(null);
-  const [importMode, setImportMode] = useState<ImportMode>(
-    settings.defaultImportMode as ImportMode,
-  );
   const [markupType, setMarkupType] = useState<PricingMode>(
     settings.pricingMode as PricingMode,
   );
@@ -428,17 +414,6 @@ export default function Index() {
       window.history.replaceState({}, '', url.toString());
     }
   }, [billingMessage, billingStatus]);
-
-  // Force DROPSHIPPING mode if plan is FREE and user tries to select AFFILIATE
-  useEffect(() => {
-    if (settings.currentPlan === "FREE" && importMode === "AFFILIATE") {
-      setImportMode("DROPSHIPPING");
-      shopify.toast.show("Affiliate Mode requires BASIC plan or higher. Switched to Dropshipping Mode.", {
-        duration: 5000,
-        isError: true,
-      });
-    }
-  }, [settings.currentPlan, importMode, shopify]);
 
   useEffect(() => {
     if (fetcher.data?.action === "termsAccepted") {
@@ -496,7 +471,6 @@ export default function Index() {
     formData.append("ebayUrl", (fetcher.data as any)?.ebayUrl);
     formData.append("publish", (productStatus === "ACTIVE").toString());
     formData.append("collectionId", selectedCollection);
-    formData.append("importMode", importMode);
     formData.append("markupValue", markupValue.toString());
     formData.append("markupType", markupType);
     fetcher.submit(formData, { method: "POST" });
@@ -509,11 +483,9 @@ export default function Index() {
   };
 
   const finalPrice =
-    importMode === "AFFILIATE"
-      ? productData?.originalPrice || 0
-      : markupType === "MULTIPLIER"
-        ? (productData?.originalPrice || 0) * markupValue
-        : (productData?.originalPrice || 0) + markupValue;
+    markupType === "MULTIPLIER"
+      ? (productData?.originalPrice || 0) * markupValue
+      : (productData?.originalPrice || 0) + markupValue;
 
   return (
     <>
@@ -542,7 +514,7 @@ export default function Index() {
         <s-section>
           <s-stack direction="block" gap="base">
             <s-text tone="subdued">
-              Import products from eBay to your Shopify store in Affiliate or Dropshipping mode.
+              Import products from eBay to your Shopify store in Dropshipping mode.
               Configure pricing, add to collections, and publish instantly.
             </s-text>
 
@@ -717,26 +689,15 @@ export default function Index() {
               </s-stack>
             </s-section>
 
-            {/* Step 3: Import Mode */}
-            <s-section heading="Step 3: Choose Import Mode">
-              <ModeSelector
-                selected={importMode}
-                onChange={setImportMode}
+            {/* Step 3: Pricing */}
+            <s-section heading="Step 3: Set Your Pricing">
+              <PricingCalculator
                 originalPrice={productData.originalPrice}
-                buttonText={settings.buttonText}
-                affiliateAllowed={settings.currentPlan !== "FREE"}
-                currentPlan={settings.currentPlan || "FREE"}
+                markupType={markupType}
+                markupValue={markupValue}
+                onMarkupTypeChange={setMarkupType}
+                onMarkupValueChange={setMarkupValue}
               />
-
-              {importMode === "DROPSHIPPING" && (
-                <PricingCalculator
-                  originalPrice={productData.originalPrice}
-                  markupType={markupType}
-                  markupValue={markupValue}
-                  onMarkupTypeChange={setMarkupType}
-                  onMarkupValueChange={setMarkupValue}
-                />
-              )}
             </s-section>
 
             {/* Step 4: Publish Settings */}
@@ -856,37 +817,9 @@ export default function Index() {
             <s-list-item>Accept the Terms of Importation</s-list-item>
             <s-list-item>Paste eBay product URL</s-list-item>
             <s-list-item>Click "Import Product"</s-list-item>
-            <s-list-item>Choose Affiliate or Dropshipping mode</s-list-item>
             <s-list-item>Configure pricing (if Dropshipping)</s-list-item>
             <s-list-item>Review and publish to your store</s-list-item>
           </s-ordered-list>
-        </s-section>
-
-        <s-section slot="aside">
-          <div
-            style={{
-              padding: "20px",
-              background: "linear-gradient(135deg, #008060 0%, #00b386 100%)",
-              borderRadius: "12px",
-              color: "white",
-              boxShadow: "0 4px 6px -1px rgba(0, 128, 96, 0.2)",
-            }}
-          >
-            <div style={{ textAlign: "center", marginBottom: "12px" }}>
-              <div style={{ fontSize: "48px" }}>💡</div>
-            </div>
-            <h3 style={{ margin: "0 0 12px 0", fontSize: "16px", fontWeight: "600", textAlign: "center" }}>
-              Don't forget to add the eBay Buy Button!
-            </h3>
-            <p style={{ margin: "0 0 16px 0", fontSize: "13px", opacity: 0.95, lineHeight: "1.5", textAlign: "center" }}>
-              Install the app block in your theme to show the "Buy on eBay" button on affiliate products.
-            </p>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <s-button variant="primary" href="/app/setup">
-                📚 View Setup Guide
-              </s-button>
-            </div>
-          </div>
         </s-section>
 
         <s-section slot="aside" heading="✨ Features">
@@ -902,9 +835,6 @@ export default function Index() {
 
         <s-section slot="aside" heading="💡 Quick Tips">
           <s-stack direction="block" gap="small">
-            <s-paragraph size="small">
-              <strong>Affiliate Mode:</strong> Best for driving traffic to eBay and earning commissions.
-            </s-paragraph>
             <s-paragraph size="small">
               <strong>Dropshipping Mode:</strong> Best for direct sales with your own pricing and margins.
             </s-paragraph>

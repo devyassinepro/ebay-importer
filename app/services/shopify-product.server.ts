@@ -4,7 +4,6 @@ import type {
   ProductOption,
   ProductVariant,
 } from "~/types";
-import { addAffiliateTag } from "./ebay-scraper.server";
 
 interface MediaInput {
   mediaContentType: "IMAGE";
@@ -75,18 +74,14 @@ interface CreateProductResult {
  * @param admin - Shopify admin GraphQL client
  * @param productData - Scraped eBay product data
  * @param ebayUrl - Original eBay URL
- * @param settings - App settings (for affiliate tag)
  * @param shouldPublish - Whether to publish product immediately (ACTIVE) or save as DRAFT
- * @param importMode - Import mode (AFFILIATE or DROPSHIPPING)
  * @returns Result with product data or error
  */
 export async function createShopifyProduct(
   admin: any,
   productData: ScrapedProduct,
   ebayUrl: string,
-  settings?: AppSettings | null,
   shouldPublish: boolean = false,
-  importMode: string = "DROPSHIPPING",
 ): Promise<CreateProductResult> {
   try {
     // ==========================================
@@ -168,11 +163,11 @@ export async function createShopifyProduct(
     const productInput: any = {
       title: productData.title,
       descriptionHtml: formatDescription(productData),
-      vendor: "Amazon Import",
+      vendor: "eBay Import",
       productType: "Imported",
       tags: [
-        "amazon-import",
-        productData.asin ? `asin:${productData.asin}` : "",
+        "ebay-import",
+        productData.itemId ? `item-id:${productData.itemId}` : "",
       ].filter(Boolean),
       status: shouldPublish ? "ACTIVE" : "DRAFT",
     };
@@ -497,23 +492,11 @@ export async function createShopifyProduct(
     }
 
     // ==========================================
-    // STEP 6: Add Amazon URL Metafield
+    // STEP 6: Add eBay URL Metafield
     // ==========================================
-    console.log("=== ADDING AMAZON URL METAFIELD ===");
+    console.log("=== ADDING EBAY URL METAFIELD ===");
 
-    let finalAmazonUrl = amazonUrl;
-
-    // Add affiliate tag if enabled
-    if (
-      settings &&
-      settings.affiliateModeEnabled &&
-      settings.amazonAffiliateId
-    ) {
-      finalAmazonUrl = addAffiliateTag(amazonUrl, settings.amazonAffiliateId);
-      console.log("Added affiliate tag to URL");
-    }
-
-    await addAmazonUrlMetafield(admin, product.id, finalAmazonUrl, importMode);
+    await addEbayUrlMetafield(admin, product.id, ebayUrl);
 
     // ==========================================
     // STEP 7: Fetch Final Product Data
@@ -587,13 +570,12 @@ export async function createShopifyProduct(
 }
 
 /**
- * Add Amazon URL and import mode as metafields to product
+ * Add eBay URL as metafield to product
  */
-async function addAmazonUrlMetafield(
+async function addEbayUrlMetafield(
   admin: any,
   productId: string,
-  amazonUrl: string,
-  importMode: string = "DROPSHIPPING",
+  ebayUrl: string,
 ): Promise<void> {
   try {
     await admin.graphql(
@@ -625,16 +607,10 @@ async function addAmazonUrlMetafield(
             id: productId,
             metafields: [
               {
-                namespace: "amazon_importer",
-                key: "amazon_url",
+                namespace: "ebay_importer",
+                key: "ebay_url",
                 type: "url",
-                value: amazonUrl,
-              },
-              {
-                namespace: "amazon_importer",
-                key: "import_mode",
-                type: "single_line_text_field",
-                value: importMode,
+                value: ebayUrl,
               },
             ],
           },
@@ -642,9 +618,9 @@ async function addAmazonUrlMetafield(
       },
     );
 
-    console.log(`Amazon metafields added successfully (mode: ${importMode})`);
+    console.log(`eBay URL metafield added successfully`);
   } catch (error) {
-    console.error("Error adding Amazon metafields:", error);
+    console.error("Error adding eBay metafield:", error);
     throw error;
   }
 }
@@ -710,7 +686,7 @@ export async function updateProductPrice(
 }
 
 /**
- * Format product description HTML from Amazon data
+ * Format product description HTML from eBay data
  */
 function formatDescription(productData: ScrapedProduct): string {
   let html = "";

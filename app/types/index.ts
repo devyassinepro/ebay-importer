@@ -6,16 +6,17 @@ export interface AppSettings {
   id: string;
   shop: string;
   rapidApiKey: string | null;
-  ebayAffiliateId: string | null;
-  affiliateModeEnabled: boolean;
-  buttonText: string;
-  buttonEnabled: boolean;
-  buttonPosition: string;
   pricingMode: PricingMode;
   pricingValue: number;
-  defaultImportMode: ImportMode;
+  defaultCollectionId: string | null;
+  autoPublish: boolean;
   termsAccepted: boolean;
   termsAcceptedAt: Date | null;
+  currentPlan: string;
+  subscriptionId: string | null;
+  subscriptionStatus: string | null;
+  planStartDate: Date | null;
+  planEndDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,7 +35,6 @@ export interface ImportedProduct {
   originalPrice: number;
   markup: number | null;
   markupType: string | null;
-  importMode: ImportMode;
   productImage: string | null;
   images: string | null;
   variantCount: number;

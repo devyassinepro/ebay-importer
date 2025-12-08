@@ -1,5 +1,5 @@
 /**
- * Amazon Importer - Import History Page
+ * eBay Importer - Import History Page
  * Professional redesign with pagination, advanced filters, and bulk actions
  */
 
@@ -49,12 +49,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Calculate statistics
   const stats = {
     total: totalCount,
-    affiliate: await prisma.importedProduct.count({
-      where: { shop: session.shop, importMode: "AFFILIATE" },
-    }),
-    dropshipping: await prisma.importedProduct.count({
-      where: { shop: session.shop, importMode: "DROPSHIPPING" },
-    }),
     active: await prisma.importedProduct.count({
       where: { shop: session.shop, status: "ACTIVE" },
     }),
@@ -73,23 +67,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const actionType = formData.get("action");
-
-  if (actionType === "switchMode") {
-    const productIds = JSON.parse(formData.get("productIds") as string);
-    const newMode = formData.get("newMode") as "AFFILIATE" | "DROPSHIPPING";
-
-    await prisma.importedProduct.updateMany({
-      where: {
-        id: { in: productIds },
-        shop: session.shop,
-      },
-      data: {
-        importMode: newMode,
-      },
-    });
-
-    return { success: true, message: `${productIds.length} product(s) switched to ${newMode} mode` };
-  }
 
   if (actionType === "delete") {
     const productIds = JSON.parse(formData.get("productIds") as string);
@@ -113,7 +90,6 @@ export default function History() {
   const shopify = useAppBridge();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterMode, setFilterMode] = useState<string>("ALL");
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<string>("newest");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -133,15 +109,12 @@ export default function History() {
   let filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.amazonAsin?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesMode =
-      filterMode === "ALL" || product.importMode === filterMode;
+      product.ebayItemId?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       filterStatus === "ALL" || product.status === filterStatus;
 
-    return matchesSearch && matchesMode && matchesStatus;
+    return matchesSearch && matchesStatus;
   });
 
   // Sort products
@@ -166,12 +139,10 @@ export default function History() {
 
   const activeFilters =
     (searchTerm ? 1 : 0) +
-    (filterMode !== "ALL" ? 1 : 0) +
     (filterStatus !== "ALL" ? 1 : 0);
 
   const clearAllFilters = () => {
     setSearchTerm("");
-    setFilterMode("ALL");
     setFilterStatus("ALL");
   };
 
@@ -189,19 +160,6 @@ export default function History() {
     } else {
       setSelectedProducts(filteredProducts.map(p => p.id));
     }
-  };
-
-  const handleBulkSwitch = (newMode: "AFFILIATE" | "DROPSHIPPING") => {
-    if (selectedProducts.length === 0) {
-      shopify.toast.show("Please select products first", { isError: true });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("action", "switchMode");
-    formData.append("productIds", JSON.stringify(selectedProducts));
-    formData.append("newMode", newMode);
-    fetcher.submit(formData, { method: "POST" });
   };
 
   const handleBulkDelete = () => {
@@ -238,52 +196,29 @@ export default function History() {
               delay={0}
             />
             <StatCard
-              icon="🟢"
-              value={stats.affiliate}
-              label="Affiliate Mode"
-              colorVariant="green"
-              delay={100}
-              trend={
-                stats.total > 0
-                  ? {
-                      value: `${((stats.affiliate / stats.total) * 100).toFixed(1)}% of total`,
-                      isPositive: true,
-                    }
-                  : undefined
-              }
-            />
-            <StatCard
-              icon="🛒"
-              value={stats.dropshipping}
-              label="Dropshipping Mode"
-              colorVariant="blue"
-              delay={200}
-              trend={
-                stats.total > 0
-                  ? {
-                      value: `${((stats.dropshipping / stats.total) * 100).toFixed(1)}% of total`,
-                      isPositive: true,
-                    }
-                  : undefined
-              }
-            />
-            <StatCard
               icon="✅"
               value={stats.active}
               label="Active Products"
-              colorVariant="yellow"
-              delay={300}
+              colorVariant="green"
+              delay={100}
               trend={{
                 value: `${stats.draft} in draft`,
                 isPositive: stats.active > stats.draft,
               }}
             />
             <StatCard
+              icon="📝"
+              value={stats.draft}
+              label="Draft Products"
+              colorVariant="yellow"
+              delay={200}
+            />
+            <StatCard
               icon="💰"
               value={`$${(stats.totalValue || 0).toFixed(0)}`}
               label="Total Catalog Value"
               colorVariant="purple"
-              delay={400}
+              delay={300}
             />
           </div>
         </s-section>
@@ -323,34 +258,6 @@ export default function History() {
               </button>
             </div>
             <div style={{ display: "flex", gap: "8px" }}>
-              <button
-                onClick={() => handleBulkSwitch("AFFILIATE")}
-                style={{
-                  background: "#10b981",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "10px 16px",
-                  color: "white",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                }}
-              >
-                🟢 Switch to Affiliate
-              </button>
-              <button
-                onClick={() => handleBulkSwitch("DROPSHIPPING")}
-                style={{
-                  background: "#3b82f6",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "10px 16px",
-                  color: "white",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                }}
-              >
-                🛒 Switch to Dropshipping
-              </button>
               <button
                 onClick={handleBulkDelete}
                 style={{
@@ -392,33 +299,9 @@ export default function History() {
             label="Search Products"
             value={searchTerm}
             onChange={(e: any) => setSearchTerm(e.target.value)}
-            placeholder="Search by title or ASIN..."
+            placeholder="Search by title or Item ID..."
             style={{ minWidth: "300px", flex: "1 1 300px" }}
           />
-
-          {/* Import Mode Filter */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "180px" }}>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#202223" }}>
-              Import Mode
-            </label>
-            <select
-              value={filterMode}
-              onChange={(e) => setFilterMode(e.target.value)}
-              style={{
-                padding: "8px 12px",
-                border: "1px solid #c9cccf",
-                borderRadius: "6px",
-                fontSize: "14px",
-                backgroundColor: "white",
-                cursor: "pointer",
-                outline: "none",
-              }}
-            >
-              <option value="ALL">🔄 All Modes</option>
-              <option value="AFFILIATE">🟢 Affiliate Only</option>
-              <option value="DROPSHIPPING">🛒 Dropshipping Only</option>
-            </select>
-          </div>
 
           {/* Status Filter */}
           <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "180px" }}>
@@ -489,11 +372,6 @@ export default function History() {
                   Search: "{searchTerm}"
                 </s-badge>
               )}
-              {filterMode !== "ALL" && (
-                <s-badge tone="success">
-                  Mode: {filterMode}
-                </s-badge>
-              )}
               {filterStatus !== "ALL" && (
                 <s-badge tone="warning">
                   Status: {filterStatus}
@@ -518,7 +396,7 @@ export default function History() {
             }
             description={
               products.length === 0
-                ? "Start by importing your first product from Amazon! It only takes a few clicks."
+                ? "Start by importing your first product from eBay! It only takes a few clicks."
                 : "Try adjusting your search and filter criteria to find what you're looking for."
             }
             actionLabel={products.length === 0 ? "Import Your First Product" : undefined}
