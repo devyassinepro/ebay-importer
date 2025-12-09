@@ -305,16 +305,6 @@ export default function BillingPage() {
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      {plan.features.buyOnEbayButton ? (
-                        <span style={{ color: "#008060" }}>✅</span>
-                      ) : (
-                        <span style={{ color: "#bf0711" }}>❌</span>
-                      )}
-                      <span style={{ fontSize: "14px", color: "#202223" }}>
-                       Affiliate Mode
-                      </span>
-                    </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       {plan.features.dropshippingAllowed ? (

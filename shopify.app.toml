@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "e2da4d390a29c0f5436af0f735602909"
-name = "EBay Importer"
+name = "1click : Ebay Importer"
 application_url = "https://ebayimporter-app.ondigitalocean.app"
 embedded = true
 

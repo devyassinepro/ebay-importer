@@ -308,19 +308,34 @@ export default function Settings() {
                     </s-paragraph>
                   </s-banner>
 
-                  <s-select
-                    label="Default Collection"
-                    value={defaultCollectionId}
-                    onChange={(e: any) => setDefaultCollectionId(e.target.value)}
-                    helptext="New products will be automatically added to this collection"
-                  >
-                    <option value="">-- No Default Collection --</option>
-                    {collections.map((c: any) => (
-                      <option key={c.id} value={c.id}>
-                        {c.title}
-                      </option>
-                    ))}
-                  </s-select>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <label style={{ fontSize: "13px", fontWeight: "600", color: "#202223" }}>
+                      Default Collection
+                    </label>
+                    <select
+                      value={defaultCollectionId}
+                      onChange={(e) => setDefaultCollectionId(e.target.value)}
+                      style={{
+                        padding: "8px 12px",
+                        border: "1px solid #c9cccf",
+                        borderRadius: "6px",
+                        fontSize: "14px",
+                        backgroundColor: "white",
+                        cursor: "pointer",
+                        outline: "none",
+                      }}
+                    >
+                      <option value="">-- No Default Collection --</option>
+                      {collections.map((c: any) => (
+                        <option key={c.id} value={c.id}>
+                          {c.title}
+                        </option>
+                      ))}
+                    </select>
+                    <p style={{ fontSize: "12px", color: "#6d7175", margin: "4px 0 0 0" }}>
+                      New products will be automatically added to this collection
+                    </p>
+                  </div>
 
                   <s-divider />
 
