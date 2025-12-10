@@ -9,7 +9,7 @@
  * Usage: node scripts/configure-gdpr-webhooks.js
  */
 
-const APP_URL = "https://ebayimporter-app.ondigitalocean.app";
+const APP_URL = "https://ebay-importer-app-dw8zn.ondigitalocean.app";
 
 const GDPR_WEBHOOKS = [
   {

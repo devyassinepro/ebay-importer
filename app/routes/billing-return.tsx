@@ -131,7 +131,7 @@ export default function BillingReturn() {
                 console.log('🔄 Billing return - params:', { host, plan, chargeId, shop });
 
                 // Build full redirect URL with all params preserved
-                const appUrl = 'https://ebayimporter-app.ondigitalocean.app/app';
+                const appUrl = 'https://ebay-importer-app-dw8zn.ondigitalocean.app/app';
                 let redirectUrl = appUrl + '?billing_completed=1';
                 if (host) redirectUrl += '&host=' + encodeURIComponent(host);
                 if (plan) redirectUrl += '&plan=' + plan;
